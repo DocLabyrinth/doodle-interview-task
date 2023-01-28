@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { sendMessage } from "../utils/doodleApi";
 import barStyles from "./MessageBar.module.css";
 
@@ -34,6 +34,10 @@ const MessageBar = ({
       });
   }, [isSending, reloadMessages]);
 
+  useEffect(() => {
+    if (inputRef.current) inputRef.current.focus();
+  }, [inputRef]);
+
   return (
     <div className={barStyles["message-bar"]}>
       <div className={barStyles["input-container"]}>
@@ -44,6 +48,11 @@ const MessageBar = ({
           name="message-state"
           className={barStyles["message-input"]}
           ref={inputRef}
+          onKeyUp={(event) => {
+            if (event.code === "Enter") {
+              onSendMessage();
+            }
+          }}
         />
         <button
           disabled={isSending}
