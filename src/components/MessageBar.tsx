@@ -27,6 +27,7 @@ const MessageBar = ({
       .then(reloadMessages)
       .then(() => {
         if (inputRef.current) inputRef.current.value = "";
+        window.scrollTo(0, document.body.scrollHeight);
       })
       .finally(() => {
         setIsSending(false);
