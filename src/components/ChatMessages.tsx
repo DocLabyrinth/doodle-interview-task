@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import messageStyles from "./ChatMessage.module.css";
 import ChatMessage from "./ChatMessage";
+import MessageBar from "./MessageBar";
 import { fetchMessages, LocalChatMessage } from "../utils/doodleApi";
 
 const POLL_INTERVAL = 3000;
@@ -13,24 +14,24 @@ const ChatMessages = () => {
   const pollForMessages = useCallback(() => {
     if (pollTimeout.current) clearTimeout(pollTimeout.current);
 
-    fetchMessages({ since: new Date(lastPollTimestamp.current || 0) })
+    return fetchMessages({ since: new Date(lastPollTimestamp.current || 0) })
       .then((apiMessages) => {
         const latestTimestamp = Math.max(
-          ...apiMessages.map((message) => message.sentAt.getTime() / 1000)
+          ...apiMessages.map((message) => message.sentAt.getTime())
         );
 
         if (
           lastPollTimestamp.current === null ||
           latestTimestamp > (lastPollTimestamp.current || 0)
         ) {
-          setMessages([...messages, ...apiMessages]);
+          setMessages(apiMessages);
         }
         lastPollTimestamp.current = new Date().getTime();
       })
       .finally(() => {
         pollTimeout.current = setTimeout(pollForMessages, POLL_INTERVAL);
       });
-  }, [messages]);
+  }, []);
 
   useEffect(() => {
     pollForMessages();
@@ -40,18 +41,22 @@ const ChatMessages = () => {
   });
 
   return (
-    <div className={messageStyles["bottom-scroll-wrapper"]}>
-      <div className={messageStyles["chat-bg"]}>
-        {messages.map(({ _id, author, sentAt, message }) => (
-          <ChatMessage
-            key={_id}
-            author={author}
-            sendTime={sentAt}
-            message={message}
-          />
-        ))}
+    <>
+      <div className={messageStyles["bottom-scroll-wrapper"]}>
+        <div className={messageStyles["chat-bg"]}>
+          {messages.map(({ _id, author, sentAt, message }) => (
+            <ChatMessage
+              key={_id}
+              author={author}
+              sendTime={sentAt}
+              message={message}
+              sentByUs={author === process.env.REACT_APP_MESSAGE_AUTHOR}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+      <MessageBar reloadMessages={pollForMessages} />
+    </>
   );
 };
 

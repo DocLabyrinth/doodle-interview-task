@@ -20,7 +20,7 @@ const ChatMessages = ({
   return (
     <div className={`${messageStyles.container}`} style={{ justifyContent }}>
       <div className={`${messageStyles.message} ${messageClass}`}>
-        {author && <div className={`${messageStyles.author}`}>{author}</div>}
+        {sentByUs || <div className={`${messageStyles.author}`}>{author}</div>}
         <div className={`${messageStyles.body} ${bodyClass}`}>{message}</div>
         <div className={`${messageStyles.date} ${dateClass}`}>
           {sendTime.toLocaleString()}
