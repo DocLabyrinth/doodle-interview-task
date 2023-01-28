@@ -3,6 +3,7 @@ import ChatMessage from "./ChatMessage";
 
 const ChatMessages = () => {
   return (
+    <div className={messageStyles["bottom-scroll-wrapper"]}>
     <div className={messageStyles["chat-bg"]}>
         {messages.map(({ _id, author, sentAt, message }) => (
       <ChatMessage

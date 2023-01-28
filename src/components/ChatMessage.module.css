@@ -1,3 +1,9 @@
+.bottom-scroll-wrapper {
+  display: "flex";
+  flex-direction: column;
+  justify-content: column-reverse;
+  overflow: scroll;
+}
 .chat-bg {
   display: flex;
   flex-direction: column;
