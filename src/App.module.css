@@ -1,0 +1,27 @@
+:root {
+  --blue: #1e90ff;
+  --white: #ffffff;
+  --black: #000000;
+  --red: #f76042;
+  --light-grey: #d6dbd2;
+  --dark-grey: #b3bcc3;
+  --yellow: #fcf6c4;
+
+  --base-spacing: 10px;
+
+  /* https://mui.com/material-ui/customization/breakpoints/ */
+  --xs: 0px;
+  --sm: 600px;
+  --md: 900px;
+  --lg: 1200px;
+  --xl: 1536px;
+}
+
+.page-container {
+  background-image: url(../public/body-bg.png);
+  background-color: var(--light-grey);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: flex-end;
+}
