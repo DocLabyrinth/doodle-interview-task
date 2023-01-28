@@ -4,19 +4,15 @@ import ChatMessage from "./ChatMessage";
 const ChatMessages = () => {
   return (
     <div className={messageStyles["chat-bg"]}>
+        {messages.map(({ _id, author, sentAt, message }) => (
       <ChatMessage
-        sender="testUser"
-        sendTime={new Date()}
-        message="Some test message"
+            key={_id}
+            author={author}
+            sendTime={sentAt}
+            message={message}
       />
-      <ChatMessage sendTime={new Date()} message="Some test message" sentByUs />
-      <ChatMessage sendTime={new Date()} message="Some test message" sentByUs />
-      <ChatMessage
-        sender="testUser"
-        sendTime={new Date()}
-        message="Some test message"
-      />
-      <ChatMessage sendTime={new Date()} message="Some test message" sentByUs />
+        ))}
+      </div>
     </div>
   );
 };

@@ -4,12 +4,12 @@ const ChatMessages = ({
   message,
   sendTime,
   sentByUs = false,
-  sender,
+  author,
 }: {
   message: string;
   sendTime: Date;
   sentByUs?: boolean;
-  sender?: string;
+  author?: string;
 }) => {
   const justifyContent = sentByUs ? "flex-end" : "flex-start";
   const messageClass =
@@ -20,7 +20,7 @@ const ChatMessages = ({
   return (
     <div className={`${messageStyles.container}`} style={{ justifyContent }}>
       <div className={`${messageStyles.message} ${messageClass}`}>
-        {sender && <div className={`${messageStyles.sender}`}>{sender}</div>}
+        {author && <div className={`${messageStyles.author}`}>{author}</div>}
         <div className={`${messageStyles.body} ${bodyClass}`}>{message}</div>
         <div className={`${messageStyles.date} ${dateClass}`}>
           {sendTime.toLocaleString()}
