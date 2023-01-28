@@ -6,7 +6,7 @@ export type ApiChatMessage = {
   token: string;
 };
 
-export type ChatMessage = Omit<ApiChatMessage, "timestamp"> & {
+export type LocalChatMessage = Omit<ApiChatMessage, "timestamp"> & {
   sentAt: Date;
 };
 
@@ -34,11 +34,11 @@ export class ApiError extends Error {
   }
 }
 
-const convertApiMessage = (message: ApiChatMessage): ChatMessage => ({
+const convertApiMessage = (message: ApiChatMessage): LocalChatMessage => ({
   _id: message._id,
   author: message.author,
   message: message.message,
-  sentAt: new Date(message.timestamp * 1000),
+  sentAt: new Date(message.timestamp),
   token: message.token,
 });
 
@@ -48,7 +48,7 @@ export const fetchMessages = ({
 }: {
   since?: Date;
   limit?: number;
-} = {}): Promise<ChatMessage[]> => {
+} = {}): Promise<LocalChatMessage[]> => {
   const getParams = new URLSearchParams({
     token: process.env.REACT_APP_DOODLE_API_TOKEN || "",
   });
