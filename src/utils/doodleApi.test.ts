@@ -5,11 +5,19 @@ describe("Doodle Api Client", () => {
     jest.restoreAllMocks();
   });
 
-  const mockMessage = {
+  const mockApiMessage = {
     _id: "60ec4ba93adb62001af39745",
     author: "Doodle",
     message: "test 3",
-    timestamp: new Date(),
+    timestamp: 1639334298794,
+    token: "NqebNLtXsswN",
+  };
+
+  const expectedMessage = {
+    _id: "60ec4ba93adb62001af39745",
+    author: "Doodle",
+    message: "test 3",
+    sentAt: new Date(1639334298794 * 1000),
     token: "NqebNLtXsswN",
   };
 
@@ -18,7 +26,7 @@ describe("Doodle Api Client", () => {
   describe("fetchMessages", () => {
     it("requests messages from the API", async () => {
       const mockResponse = {
-        json: () => Promise.resolve([mockMessage]),
+        json: () => Promise.resolve([mockApiMessage]),
         ok: true,
         status: 200,
       } as Response;
@@ -27,13 +35,13 @@ describe("Doodle Api Client", () => {
 
       const messages = await fetchMessages();
       expect(global.fetch).toBeCalledWith(expectedBaseUrl, {});
-      expect(messages).toEqual([mockMessage]);
+      expect(messages).toEqual([expectedMessage]);
     });
 
     describe("requesting messages since a given time/date", () => {
       it("adds the time to the url as a unix timestamp", async () => {
         const mockResponse = {
-          json: () => Promise.resolve([mockMessage]),
+          json: () => Promise.resolve([mockApiMessage]),
           ok: true,
           status: 200,
         } as Response;
@@ -47,14 +55,14 @@ describe("Doodle Api Client", () => {
           `${expectedBaseUrl}&since=${Math.floor(since.getTime() / 1000)}`,
           {}
         );
-        expect(messages).toEqual([mockMessage]);
+        expect(messages).toEqual([expectedMessage]);
       });
     });
 
     describe("requesting a limited number of messages", () => {
       it("adds a limit parameter to the url", async () => {
         const mockResponse = {
-          json: () => Promise.resolve([mockMessage]),
+          json: () => Promise.resolve([mockApiMessage]),
           ok: true,
           status: 200,
         } as Response;
@@ -68,7 +76,7 @@ describe("Doodle Api Client", () => {
           `${expectedBaseUrl}&limit=${limit}`,
           {}
         );
-        expect(messages).toEqual([mockMessage]);
+        expect(messages).toEqual([expectedMessage]);
       });
     });
 
@@ -92,7 +100,7 @@ describe("Doodle Api Client", () => {
   describe("sendMessage", () => {
     it("sends a new message to the API", async () => {
       const mockResponse = {
-        json: () => Promise.resolve(mockMessage),
+        json: () => Promise.resolve(mockApiMessage),
         ok: true,
         status: 200,
       } as Response;
@@ -111,7 +119,7 @@ describe("Doodle Api Client", () => {
         },
         body: JSON.stringify(messageRequest),
       });
-      expect(message).toEqual(mockMessage);
+      expect(message).toEqual(expectedMessage);
     });
 
     describe("the API returns an error", () => {

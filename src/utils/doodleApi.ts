@@ -2,8 +2,12 @@ export type ApiChatMessage = {
   _id: string;
   author: string;
   message: string;
-  timestamp: Date;
+  timestamp: number;
   token: string;
+};
+
+export type ChatMessage = Omit<ApiChatMessage, "timestamp"> & {
+  sentAt: Date;
 };
 
 type ApiErrorDetail = {
@@ -30,13 +34,21 @@ export class ApiError extends Error {
   }
 }
 
+const convertApiMessage = (message: ApiChatMessage): ChatMessage => ({
+  _id: message._id,
+  author: message.author,
+  message: message.message,
+  sentAt: new Date(message.timestamp * 1000),
+  token: message.token,
+});
+
 export const fetchMessages = ({
   since,
   limit,
 }: {
   since?: Date;
   limit?: number;
-} = {}): Promise<ApiChatMessage[]> => {
+} = {}): Promise<ChatMessage[]> => {
   const getParams = new URLSearchParams({
     token: process.env.REACT_APP_DOODLE_API_TOKEN || "",
   });
@@ -45,7 +57,9 @@ export const fetchMessages = ({
     getParams.set("since", Math.floor(since.getTime() / 1000).toString());
   if (limit) getParams.set("limit", limit.toString());
 
-  return apiRequest<ApiChatMessage[]>({ method: "GET", getParams });
+  return apiRequest<ApiChatMessage[]>({ method: "GET", getParams }).then(
+    (messages) => messages.map(convertApiMessage)
+  );
 };
 
 export const sendMessage = ({ author, message }: SendMessageRequest) =>
@@ -55,7 +69,7 @@ export const sendMessage = ({ author, message }: SendMessageRequest) =>
       token: process.env.REACT_APP_DOODLE_API_TOKEN || "",
     }),
     postBody: { author, message },
-  });
+  }).then((message) => convertApiMessage(message));
 
 const apiRequest = <ResponseBody, PostRequestBody = {}>({
   method,
