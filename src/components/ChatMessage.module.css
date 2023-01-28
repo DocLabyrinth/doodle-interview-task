@@ -4,6 +4,7 @@
   justify-content: column-reverse;
   overflow: scroll;
 }
+
 .chat-bg {
   display: flex;
   flex-direction: column;
@@ -47,8 +48,9 @@
 
 .body {
   font-size: 16px;
-  height: 16px;
   line-height: 12px;
+  max-height: 100px;
+  overflow-y: scroll;
 }
 
 .body-ours {
