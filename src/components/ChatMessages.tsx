@@ -5,7 +5,7 @@ import MessageBar from "./MessageBar";
 import { fetchMessages, LocalChatMessage } from "../utils/doodleApi";
 
 const POLL_INTERVAL = 3000;
-const MSG_LIMIT = 500;
+const MSG_LIMIT = 50;
 
 const ChatMessages = () => {
   const [messages, setMessages] = useState<LocalChatMessage[]>([]);
@@ -28,14 +28,14 @@ const ChatMessages = () => {
           lastPollTimestamp.current === null ||
           latestTimestamp > (lastPollTimestamp.current || 0)
         ) {
-          setMessages(apiMessages);
+          setMessages([...messages, ...apiMessages]);
         }
         lastPollTimestamp.current = new Date().getTime();
       })
       .finally(() => {
         pollTimeout.current = setTimeout(pollForMessages, POLL_INTERVAL);
       });
-  }, []);
+  }, [messages]);
 
   useEffect(() => {
     pollForMessages().then(() => {

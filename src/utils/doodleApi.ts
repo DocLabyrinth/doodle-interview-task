@@ -53,8 +53,7 @@ export const fetchMessages = ({
     token: process.env.REACT_APP_DOODLE_API_TOKEN || "",
   });
 
-  if (since)
-    getParams.set("since", Math.floor(since.getTime() / 1000).toString());
+  if (since) getParams.set("since", Math.floor(since.getTime()).toString());
   if (limit) getParams.set("limit", limit.toString());
 
   return apiRequest<ApiChatMessage[]>({ method: "GET", getParams }).then(
